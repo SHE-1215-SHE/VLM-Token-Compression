@@ -1,1 +1,56 @@
-IyBWTE0tVG9rZW4tQ29tcHJlc3Npb24tQmVuY2gKCkEgdW5pZmllZCBiZW5jaG1hcmsgZm9yICoqdHJhaW5pbmctZnJlZSB2aXN1YWwgdG9rZW4gY29tcHJlc3Npb24qKiBpbiBNdWx0aW1vZGFsIExMTXMsIHdpdGggcmVhbCB3YWxsLWNsb2NrIG1lYXN1cmVtZW50cyBvbiBjb25zdW1lciBHUFVzLgoKPiDnirbmgIHvvJrov5vooYzkuK3vvIhXMe+8ieOAguacrCBSRUFETUUg5Li66aqo5p625Yid56i/77yM57uT5p6c6KGo5bCG6ZqP6K+E5rWL5o6o6L+b5aGr5YWF44CCCgojIyBUTDtEUgoKLSDor4TmtYvlr7nosaHvvJpRd2VuMi41LVZMLTNCIC8gN0IKLSDmlrnms5XvvJpGYXN0VuOAgVZpc2lvblppcOOAgUNST1AtUu+8iHRyYWluaW5nLWZyZWUg6KeG6KeJIHRva2VuIOWOi+e8qe+8iQotIOaMh+agh++8muS7u+WKoeeyvuW6pu+8iFBPUEUgLyBHUUEgLyBUZXh0VlFBIC8gTU1CZW5jaCDlrZDpm4bvvIkrICoq55yf5a6e5bu26L+fL+aYvuWtmCoq77yI6Z2eIEZMT1BzIOS7o+eQhu+8iQotIOaguOW/g+WPkeeOsO+8iOWNoOS9je+8ie+8mnRva2VuIOmihOeul+mZjeWIsCBYWCDku6XkuIvml7bvvIx3YWxsLWNsb2NrIOaUtuebiuS4jueyvuW6puaNn+WkseWmguS9leadg+ihoe+8m09DUi/nu4bnspLluqbku7vliqHkuLrkvZXltKkKCiMjIFdoeQoK5aSa5pWw6K665paH5Y+q5oqlIEZMT1BzIC8gTUFDc++8jOS9huinhuiniSB0b2tlbiDljovnvKnlnKggZGVjb2RlIOmYtuauteaUtuebiuaciemZkOOAgXByZWZpbGwg5pS255uK5Y+XIGtlcm5lbCDlvbHlk43vvIwqKua2iOi0uee6pyBHUFUg5LiKIHdhbGwtY2xvY2sg57uP5bi45LiN6ZmN5Y+N5Y2HKirigJTigJTov5nmmK/lhazlvIDnl5vngrnvvIzmnKzku5PlupPnu5nlh7rns7vnu5/lrp7mtYvjgIIKCiMjIE1ldGhvZHMKCnwgTWV0aG9kIHwg5Y6L57yp5L2N572uIHwg562W55WlIHwg5p2l5rqQIHwKfC0tLXwtLS18LS0tfC0tLXwKfCBGYXN0ViB8IExMTSBkZWNvZGVyIOesrCBLIOWxgiB8IOaMiSBhdHRlbnRpb24g5YiG5pWw5Ymq6KeG6KeJIHRva2VuIHwgRUNDVicyNCB8CnwgVmlzaW9uWmlwIHwg6KeG6KeJ57yW56CB5Zmo6L6T5Ye6IHwg5Li75a+8IHRva2VuIOmAieaLqSArIOS4iuS4i+aWh+WQiOW5tiB8IENWUFInMjQgfAp8IENST1AtUiB8IE1MTE0gfCDnu4bnspLluqblhpfkvZnmipHliLbvvIhyZS13ZWlnaHQgKyBwcnVuZe+8iSB8IGFyWGl2JzI1IHwKCiMjIFJlc3VsdHPvvIjmqKHmnb/vvIzlvoXloavvvIkKCnwgTWV0aG9kIHwgQnVkZ2V0IHwgUE9QRS1GMSB8IEdRQS1BY2MgfCBUZXh0VlFBIHwgTU1CZW5jaCB8IFByZWZpbGwgKG1zKSB8IERlY29kZSAobXMpIHwgUGVhayBNZW0gKEdCKSB8CnwtLS18LS0tfC0tLXwtLS18LS0tfC0tLXwtLS18LS0tfC0tLXwKfCBiYXNlbGluZSAoNTc2KSB8IDEwMCUgfCB8IHwgfCB8IHwgfCB8CnwgRmFzdFYgfCAzMyUgfCB8IHwgfCB8IHwgfCB8CnwgLi4uIHwgfCB8IHwgfCB8IHwgfCB8CgojIyDmlofnjK7ohInnu5zvvJpWaVQgVG9rZW4g6YCJ5oupIOKGkiBWTE0gVG9rZW4g5Y6L57ypCgrvvIjpnaLor5Uv6K6y6L+w55So5Li757q/77yJRHluYW1pY1ZpVCAvIEVWaVQgLyBOQVAgLyBNQVQgLyBUb01lIC8gRmFzdGVyVmlUIC8gTFZUUCAvIE1QTSDnrYnlnKjnuq/liIbnsbsgVmlUIOS4iuWBmiB0b2tlbiDliarmnp0v5ZCI5bm277ybRmFzdFYg5pys6LSo5pivIER5bmFtaWNWaVQg55qEIGRlY29kZXIg54mI77yI55SoIFtDTFNd4oaS5pyA5ZCO5paH5pysIHRva2VuIOeahCBhdHRlbnRpb24g5pu/5Luj77yJ44CC5pys5LuT5bqT5oqK6L+Z5p2h57q/57uf5LiA5pS+5YiwIFZMTSDor4TmtYvkuIvmo4DpqozjgIIKCiMjIFF1aWNrIFN0YXJ0CgpgYGBiYXNoCnBpcCBpbnN0YWxsIC1yIHJlcXVpcmVtZW50cy50eHQKcHl0aG9uIHNjcmlwdHMvY2hlY2tfZW52LnB5ICAgICAgICAgICMgVzEg6Ieq5qOA77ya5o6o55CGICsgdG9rZW4g5pWwICsgYXR0ZW50aW9uIGhvb2sKcHl0aG9uIHNjcmlwdHMvcnVuX2Jhc2VsaW5lLnB5ICAgICAgICMg5peg5Y6L57yp5Z+657q/CmBgYAoKIyMgUm9hZG1hcAoKLSBbIF0gVzE6IOaOqOeQhiBoYXJuZXNzICsgaG9vayDpqozor4EgKyDln7rnur8KLSBbIF0gVzI6IEZhc3RWIC8gVmlzaW9uWmlwIOaPkuahqQotIFsgXSBXMzog5YWo6YePIHN3ZWVwICsgd2FsbC1jbG9jayDooagKLSBbIF0gVzQ6IOe7k+iuuuWbviArIEdyYWRpbyBkZW1vCi0gWyBdIOaDs+azle+8muinhuiniee8lueggeWZqOS+p+WOi+e8qSDDlyBMTE0g5L6n5Y6L57ypID0g5Y+M56uv5Y6L57yp77yI57uT5ZCI6L276YePIFZpVCDnu4/pqozvvIkKCiMjIExpY2Vuc2UgLyBDaXRhdGlvbgoKVEJECg==
+# VLM-Token-Compression-Bench
+
+A unified benchmark for **training-free visual token compression** in Multimodal LLMs, with real wall-clock measurements on consumer GPUs.
+
+> 状态：进行中（W1）。本 README 为骨架初稿，结果表将随评测推进填充。
+
+## TL;DR
+
+- 评测对象：Qwen2.5-VL-3B / 7B
+- 方法：FastV、VisionZip、CROP-R（training-free 视觉 token 压缩）
+- 指标：任务精度（POPE / GQA / TextVQA / MMBench 子集）+ **真实延迟/显存**（非 FLOPs 代理）
+- 核心发现（占位）：token 预算降到 XX 以下时，wall-clock 收益与精度损失如何权衡；OCR/细粒度任务为何崩
+
+## Why
+
+多数论文只报 FLOPs / MACs，但视觉 token 压缩在 decode 阶段收益有限、prefill 收益受 kernel 影响，**消费级 GPU 上 wall-clock 经常不降反升**——这是公开痛点，本仓库给出系统实测。
+
+## Methods
+
+| Method | 压缩位置 | 策略 | 来源 |
+|---|---|---|---|
+| FastV | LLM decoder 第 K 层 | 按 attention 分数剪视觉 token | ECCV'24 |
+| VisionZip | 视觉编码器输出 | 主导 token 选择 + 上下文合并 | CVPR'24 |
+| CROP-R | MLLM | 细粒度冗余抑制（re-weight + prune） | arXiv'25 |
+
+## Results（模板，待填）
+
+| Method | Budget | POPE-F1 | GQA-Acc | TextVQA | MMBench | Prefill (ms) | Decode (ms) | Peak Mem (GB) |
+|---|---|---|---|---|---|---|---|---|
+| baseline (576) | 100% | | | | | | | |
+| FastV | 33% | | | | | | | |
+| ... | | | | | | | | |
+
+## 文献脉络：ViT Token 选择 → VLM Token 压缩
+
+（面试/讲述用主线）DynamicViT / EViT / NAP / MAT / ToMe / FasterViT / LVTP / MPM 等在纯分类 ViT 上做 token 剪枝/合并；FastV 本质是 DynamicViT 的 decoder 版（用 [CLS]→最后文本 token 的 attention 替代）。本仓库把这条线统一放到 VLM 评测下检验。
+
+## Quick Start
+
+```bash
+pip install -r requirements.txt
+python scripts/check_env.py          # W1 自检：推理 + token 数 + attention hook
+python scripts/run_baseline.py       # 无压缩基线
+```
+
+## Roadmap
+
+- [ ] W1: 推理 harness + hook 验证 + 基线
+- [ ] W2: FastV / VisionZip 插桩
+- [ ] W3: 全量 sweep + wall-clock 表
+- [ ] W4: 结论图 + Gradio demo
+- [ ] 想法：视觉编码器侧压缩 × LLM 侧压缩 = 双端压缩（结合轻量 ViT 经验）
+
+## License / Citation
+
+TBD

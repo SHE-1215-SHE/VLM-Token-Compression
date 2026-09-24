@@ -1,1 +1,18 @@
-IiIiVmlzaW9uWmlwIChDVlBSJzI0KTog6KeG6KeJ57yW56CB5Zmo6L6T5Ye65L6n4oCU4oCU55SoIFtDTFNdIOWvuSBwYXRjaCDnmoQgYXR0ZW50aW9uCumAiSBkb21pbmFudCB0b2tlbnPvvIzlhbbkvZnkuIrkuIvmlocgdG9rZW4g5Yqg5p2D5ZCI5bm244CCCgpXMiDlrp7njrDjgILlj4LogIM6IGh0dHBzOi8vZ2l0aHViLmNvbS9kdmxhYi1yZXNlYXJjaC9WaXNpb25aaXAK5rOo5oSP77yaUXdlbjIuNS1WTCDml6AgW0NMU13vvIzpnIDnlKggYXR0ZW50aW9uIOWIl+Wdh+WAvOaIliBsYXN0LXJvdyDov5HkvLzvvIzlsZ7pgILphY3ngrnjgIIKIiIiCmZyb20gX19mdXR1cmVfXyBpbXBvcnQgYW5ub3RhdGlvbnMKCmltcG9ydCB0b3JjaAoKZnJvbSAuYmFzZSBpbXBvcnQgQ29tcHJlc3Npb25NZXRob2QKCgpjbGFzcyBWaXNpb25aaXAoQ29tcHJlc3Npb25NZXRob2QpOgogICAgbmFtZSA9ICJ2aXNpb256aXAiCgogICAgZGVmIGNvbXByZXNzKHNlbGYsIHZpc3VhbF90b2tlbnM6IHRvcmNoLlRlbnNvciwgYXR0bjogdG9yY2guVGVuc29yIHwgTm9uZSA9IE5vbmUpIC0+IHRvcmNoLlRlbnNvcjoKICAgICAgICByYWlzZSBOb3RJbXBsZW1lbnRlZEVycm9yKCJXMiDku7vliqHvvJpkb21pbmFudCBzZWxlY3Rpb24gKyBjb250ZXh0dWFsIG1lcmdpbmciKQo=
+"""VisionZip (CVPR'24): 视觉编码器输出侧——用 [CLS] 对 patch 的 attention
+选 dominant tokens，其余上下文 token 加权合并。
+
+W2 实现。参考: https://github.com/dvlab-research/VisionZip
+注意：Qwen2.5-VL 无 [CLS]，需用 attention 列均值或 last-row 近似，属适配点。
+"""
+from __future__ import annotations
+
+import torch
+
+from .base import CompressionMethod
+
+
+class VisionZip(CompressionMethod):
+    name = "visionzip"
+
+    def compress(self, visual_tokens: torch.Tensor, attn: torch.Tensor | None = None) -> torch.Tensor:
+        raise NotImplementedError("W2 任务：dominant selection + contextual merging")

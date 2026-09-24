@@ -1,1 +1,28 @@
-IiIiTU1CZW5jaDog6YCJ5oup6aKY77yIZGV2IOWtkOmbhu+8ie+8jOaKpSBBY2N1cmFjeeOAggrlrZDpm4YgNTAwIOadoSAtPiBkYXRhL21tYmVuY2hfc2FtcGxlLmpzb25sCiIiIgpmcm9tIF9fZnV0dXJlX18gaW1wb3J0IGFubm90YXRpb25zCgppbXBvcnQganNvbgppbXBvcnQgcmUKZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCgoKZGVmIGxvYWRfc2FtcGxlKGRhdGFfZGlyOiBzdHIsIG46IGludCA9IDUwMCwgc2VlZDogaW50ID0gNDIpOgogICAgcGF0aCA9IFBhdGgoZGF0YV9kaXIpIC8gIm1tYmVuY2hfc2FtcGxlLmpzb25sIgogICAgd2l0aCBvcGVuKHBhdGgsICJyIiwgZW5jb2Rpbmc9InV0Zi04IikgYXMgZjoKICAgICAgICByZXR1cm4gW2pzb24ubG9hZHMobGluZSkgZm9yIGxpbmUgaW4gZl0KCgpkZWYgcHJvbXB0X29mKGl0ZW06IGRpY3QpIC0+IHN0cjoKICAgIG9wdHMgPSAiXG4iLmpvaW4oZiJ7a30uIHt2fSIgZm9yIGssIHYgaW4gaXRlbVsiY2hvaWNlcyJdLml0ZW1zKCkpCiAgICByZXR1cm4gZiJ7aXRlbVsncXVlc3Rpb24nXX1cbntvcHRzfVxuQW5zd2VyIHdpdGggdGhlIG9wdGlvbidzIGxldHRlciBvbmx5LiIKCgpkZWYgcGFyc2VfYW5zd2VyKHRleHQ6IHN0cikgLT4gc3RyOgogICAgbSA9IHJlLnNlYXJjaChyIlxiKFtBLURdKVxiIiwgdGV4dC51cHBlcigpKQogICAgcmV0dXJuIG0uZ3JvdXAoMSkgaWYgbSBlbHNlICIiCgoKZGVmIHNjb3JlKHByZWRzOiBsaXN0W3N0cl0sIGd0czogbGlzdFtzdHJdKSAtPiBkaWN0OgogICAgcmV0dXJuIHsiYWNjIjogc3VtKHAgPT0gZyBmb3IgcCwgZyBpbiB6aXAocHJlZHMsIGd0cykpIC8gbWF4KGxlbihndHMpLCAxKX0K
+"""MMBench: 选择题（dev 子集），报 Accuracy。
+子集 500 条 -> data/mmbench_sample.jsonl
+"""
+from __future__ import annotations
+
+import json
+import re
+from pathlib import Path
+
+
+def load_sample(data_dir: str, n: int = 500, seed: int = 42):
+    path = Path(data_dir) / "mmbench_sample.jsonl"
+    with open(path, "r", encoding="utf-8") as f:
+        return [json.loads(line) for line in f]
+
+
+def prompt_of(item: dict) -> str:
+    opts = "\n".join(f"{k}. {v}" for k, v in item["choices"].items())
+    return f"{item['question']}\n{opts}\nAnswer with the option's letter only."
+
+
+def parse_answer(text: str) -> str:
+    m = re.search(r"\b([A-D])\b", text.upper())
+    return m.group(1) if m else ""
+
+
+def score(preds: list[str], gts: list[str]) -> dict:
+    return {"acc": sum(p == g for p, g in zip(preds, gts)) / max(len(gts), 1)}

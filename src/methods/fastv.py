@@ -1,1 +1,22 @@
-IiIiRmFzdFYgKEVDQ1YnMjQpOiBkZWNvZGVyIOesrCBLIOWxguWQjuaMieacgOWQjuS4gOihjOaWh+acrCB0b2tlbiDlr7nop4bop4kgdG9rZW4g55qECmF0dGVudGlvbiDliIbmlbDmjpLluo/vvIzkv53nlZkgdG9wLXJhdGlvIOinhuiniSB0b2tlbuOAggoKVzIg5a6e546w44CC5Y+C6ICDOiBodHRwczovL2dpdGh1Yi5jb20vcGt1bmxwLWljbGVyL0Zhc3RWCiIiIgpmcm9tIF9fZnV0dXJlX18gaW1wb3J0IGFubm90YXRpb25zCgppbXBvcnQgdG9yY2gKCmZyb20gLmJhc2UgaW1wb3J0IENvbXByZXNzaW9uTWV0aG9kCgoKY2xhc3MgRmFzdFYoQ29tcHJlc3Npb25NZXRob2QpOgogICAgbmFtZSA9ICJmYXN0diIKCiAgICBkZWYgX19pbml0X18oc2VsZiwgYnVkZ2V0OiBmbG9hdCA9IDAuMzMsIGtfbGF5ZXI6IGludCA9IDIsICoqa3dhcmdzKToKICAgICAgICBzdXBlcigpLl9faW5pdF9fKGJ1ZGdldCwgKiprd2FyZ3MpCiAgICAgICAgc2VsZi5rX2xheWVyID0ga19sYXllcgoKICAgIGRlZiBjb21wcmVzcyhzZWxmLCB2aXN1YWxfdG9rZW5zOiB0b3JjaC5UZW5zb3IsIGF0dG46IHRvcmNoLlRlbnNvciB8IE5vbmUgPSBOb25lKSAtPiB0b3JjaC5UZW5zb3I6CiAgICAgICAgIyBhdHRuOiAoQiwgSCwgTCwgTCkg56ysIGtfbGF5ZXIg5bGC5rOo5oSP5Yqb77yb5Y+W5pyA5ZCO5LiA5Liq5paH5pysIHRva2VuIOihjOWvueinhuinieWIl+eahOWIhuaVsAogICAgICAgIHJhaXNlIE5vdEltcGxlbWVudGVkRXJyb3IoIlcyIOS7u+WKoe+8muWcqOatpOWunueOsCBhdHRlbnRpb24gcmFuayArIHRvcGsgZ2F0aGVyIikK
+"""FastV (ECCV'24): decoder 第 K 层后按最后一行文本 token 对视觉 token 的
+attention 分数排序，保留 top-ratio 视觉 token。
+
+W2 实现。参考: https://github.com/pkunlp-icler/FastV
+"""
+from __future__ import annotations
+
+import torch
+
+from .base import CompressionMethod
+
+
+class FastV(CompressionMethod):
+    name = "fastv"
+
+    def __init__(self, budget: float = 0.33, k_layer: int = 2, **kwargs):
+        super().__init__(budget, **kwargs)
+        self.k_layer = k_layer
+
+    def compress(self, visual_tokens: torch.Tensor, attn: torch.Tensor | None = None) -> torch.Tensor:
+        # attn: (B, H, L, L) 第 k_layer 层注意力；取最后一个文本 token 行对视觉列的分数
+        raise NotImplementedError("W2 任务：在此实现 attention rank + topk gather")

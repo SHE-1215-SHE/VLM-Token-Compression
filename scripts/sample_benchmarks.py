@@ -1,1 +1,36 @@
-IiIi5ZCEIGJlbmNobWFyayDlm7rlrpogc2VlZCDmir3moLfkuLoganNvbmzvvIjkv53or4Hnu5Pmnpzlj6/lpI3njrDjgIHlj6/lr7nmr5TvvInjgIIKCuaVsOaNruS4i+i9veingSBSRUFETUXjgIxEYXRh44CN77yb5q2k5aSE5Y+q5YGa5oq95qC35LiO5qC85byP57uf5LiA44CCCui+k+WHujogZGF0YS97cG9wZSxncWEsdGV4dHZxYSxtbWJlbmNofV9zYW1wbGUuanNvbmwKIiIiCmZyb20gX19mdXR1cmVfXyBpbXBvcnQgYW5ub3RhdGlvbnMKCmltcG9ydCBhcmdwYXJzZQppbXBvcnQganNvbgppbXBvcnQgcmFuZG9tCmZyb20gcGF0aGxpYiBpbXBvcnQgUGF0aAoKTiA9IHsicG9wZSI6IDUwMCwgImdxYSI6IDUwMCwgInRleHR2cWEiOiAzMDAsICJtbWJlbmNoIjogNTAwfQoKCmRlZiBzYW1wbGUocm93czogbGlzdFtkaWN0XSwgbjogaW50LCBzZWVkOiBpbnQpIC0+IGxpc3RbZGljdF06CiAgICBybmcgPSByYW5kb20uUmFuZG9tKHNlZWQpCiAgICByZXR1cm4gcm5nLnNhbXBsZShyb3dzLCBtaW4obiwgbGVuKHJvd3MpKSkKCgpkZWYgbWFpbigpOgogICAgYXAgPSBhcmdwYXJzZS5Bcmd1bWVudFBhcnNlcigpCiAgICBhcC5hZGRfYXJndW1lbnQoIi0tc2VlZCIsIHR5cGU9aW50LCBkZWZhdWx0PTQyKQogICAgYXAuYWRkX2FyZ3VtZW50KCItLWRhdGEtZGlyIiwgZGVmYXVsdD0iZGF0YSIpCiAgICBhcC5hZGRfYXJndW1lbnQoIi0tcmF3LWRpciIsIGRlZmF1bHQ9ImRhdGEvcmF3IikKICAgIGFyZ3MgPSBhcC5wYXJzZV9hcmdzKCkKCiAgICBvdXQgPSBQYXRoKGFyZ3MuZGF0YV9kaXIpCiAgICBvdXQubWtkaXIocGFyZW50cz1UcnVlLCBleGlzdF9vaz1UcnVlKQogICAgIyBXMSDku7vliqEgNe+8muaMiSByYXcg5paH5Lu25qC85byP6K+75Y+WIC0+IHNhbXBsZSAtPiDlhpkganNvbmwKICAgICMg5q+P5p2h57uf5LiA5a2X5q61OiB7aWQsIGltYWdlLCBxdWVzdGlvbiwgYW5zd2VyLCBjaG9pY2VzP30KICAgIHByaW50KCJUT0RPKFcxLTUpOiDlrp7njrDlm5vkuKrmlbDmja7pm4bnmoQgcmVhZGVy77yM5a2X5q615a+56b2QIHJ1bm5lci5weSIpCgoKaWYgX19uYW1lX18gPT0gIl9fbWFpbl9fIjoKICAgIG1haW4oKQo=
+"""各 benchmark 固定 seed 抽样为 jsonl（保证结果可复现、可对比）。
+
+数据下载见 README「Data」；此处只做抽样与格式统一。
+输出: data/{pope,gqa,textvqa,mmbench}_sample.jsonl
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import random
+from pathlib import Path
+
+N = {"pope": 500, "gqa": 500, "textvqa": 300, "mmbench": 500}
+
+
+def sample(rows: list[dict], n: int, seed: int) -> list[dict]:
+    rng = random.Random(seed)
+    return rng.sample(rows, min(n, len(rows)))
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--data-dir", default="data")
+    ap.add_argument("--raw-dir", default="data/raw")
+    args = ap.parse_args()
+
+    out = Path(args.data_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    # W1 任务 5：按 raw 文件格式读取 -> sample -> 写 jsonl
+    # 每条统一字段: {id, image, question, answer, choices?}
+    print("TODO(W1-5): 实现四个数据集的 reader，字段对齐 runner.py")
+
+
+if __name__ == "__main__":
+    main()

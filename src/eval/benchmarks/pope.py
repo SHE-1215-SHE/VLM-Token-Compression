@@ -1,1 +1,34 @@
-IiIiUE9QRTog5LqM5YWD5a2Y5Zyo5oCn6Zeu562U77yIeWVzL25v77yJ77yM5oqlIEYxIC8gQWNjdXJhY3njgIIK5pWw5o2uOiBodHRwczovL2dpdGh1Yi5jb20vUlVDQUlCb3gvUE9QRSDvvIhjb2NvIOWIkuWIhu+8iQrlrZDpm4Y6IHNjcmlwdHMvc2FtcGxlX2JlbmNobWFya3MucHkg5Zu65a6aIHNlZWQg5oq9IDUwMCDmnaHlrZggZGF0YS9wb3BlX3NhbXBsZS5qc29ubAoiIiIKZnJvbSBfX2Z1dHVyZV9fIGltcG9ydCBhbm5vdGF0aW9ucwoKaW1wb3J0IGpzb24KZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCgoKZGVmIGxvYWRfc2FtcGxlKGRhdGFfZGlyOiBzdHIsIG46IGludCA9IDUwMCwgc2VlZDogaW50ID0gNDIpOgogICAgcGF0aCA9IFBhdGgoZGF0YV9kaXIpIC8gInBvcGVfc2FtcGxlLmpzb25sIgogICAgd2l0aCBvcGVuKHBhdGgsICJyIiwgZW5jb2Rpbmc9InV0Zi04IikgYXMgZjoKICAgICAgICByZXR1cm4gW2pzb24ubG9hZHMobGluZSkgZm9yIGxpbmUgaW4gZl0KCgpkZWYgcHJvbXB0X29mKGl0ZW06IGRpY3QpIC0+IHN0cjoKICAgIHJldHVybiBpdGVtWyJxdWVzdGlvbiJdICsgIiBBbnN3ZXIgdGhlIHF1ZXN0aW9uIHdpdGggWWVzIG9yIE5vLiIKCgpkZWYgcGFyc2VfYW5zd2VyKHRleHQ6IHN0cikgLT4gc3RyOgogICAgdCA9IHRleHQuc3RyaXAoKS5sb3dlcigpCiAgICByZXR1cm4gInllcyIgaWYgdC5zdGFydHN3aXRoKCJ5ZXMiKSBlbHNlICJubyIKCgpkZWYgc2NvcmUocHJlZHM6IGxpc3Rbc3RyXSwgZ3RzOiBsaXN0W3N0cl0pIC0+IGRpY3Q6CiAgICB0cCA9IHN1bShwID09ICJ5ZXMiIGFuZCBnID09ICJ5ZXMiIGZvciBwLCBnIGluIHppcChwcmVkcywgZ3RzKSkKICAgIGZwID0gc3VtKHAgPT0gInllcyIgYW5kIGcgPT0gIm5vIiBmb3IgcCwgZyBpbiB6aXAocHJlZHMsIGd0cykpCiAgICBmbiA9IHN1bShwID09ICJubyIgYW5kIGcgPT0gInllcyIgZm9yIHAsIGcgaW4gemlwKHByZWRzLCBndHMpKQogICAgYWNjID0gc3VtKHAgPT0gZyBmb3IgcCwgZyBpbiB6aXAocHJlZHMsIGd0cykpIC8gbGVuKGd0cykKICAgIHByZWNpc2lvbiA9IHRwIC8gKHRwICsgZnAgKyAxZS05KQogICAgcmVjYWxsID0gdHAgLyAodHAgKyBmbiArIDFlLTkpCiAgICBmMSA9IDIgKiBwcmVjaXNpb24gKiByZWNhbGwgLyAocHJlY2lzaW9uICsgcmVjYWxsICsgMWUtOSkKICAgIHJldHVybiB7ImFjYyI6IGFjYywgImYxIjogZjF9Cg==
+"""POPE: 二元存在性问答（yes/no），报 F1 / Accuracy。
+数据: https://github.com/RUCAIBox/POPE （coco 划分）
+子集: scripts/sample_benchmarks.py 固定 seed 抽 500 条存 data/pope_sample.jsonl
+"""
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+
+def load_sample(data_dir: str, n: int = 500, seed: int = 42):
+    path = Path(data_dir) / "pope_sample.jsonl"
+    with open(path, "r", encoding="utf-8") as f:
+        return [json.loads(line) for line in f]
+
+
+def prompt_of(item: dict) -> str:
+    return item["question"] + " Answer the question with Yes or No."
+
+
+def parse_answer(text: str) -> str:
+    t = text.strip().lower()
+    return "yes" if t.startswith("yes") else "no"
+
+
+def score(preds: list[str], gts: list[str]) -> dict:
+    tp = sum(p == "yes" and g == "yes" for p, g in zip(preds, gts))
+    fp = sum(p == "yes" and g == "no" for p, g in zip(preds, gts))
+    fn = sum(p == "no" and g == "yes" for p, g in zip(preds, gts))
+    acc = sum(p == g for p, g in zip(preds, gts)) / len(gts)
+    precision = tp / (tp + fp + 1e-9)
+    recall = tp / (tp + fn + 1e-9)
+    f1 = 2 * precision * recall / (precision + recall + 1e-9)
+    return {"acc": acc, "f1": f1}

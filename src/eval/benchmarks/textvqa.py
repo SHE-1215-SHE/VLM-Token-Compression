@@ -1,1 +1,43 @@
-IiIiVGV4dFZRQTog5Zu+5Lit5paH5a2X6K+75Y+W77yIT0NSIOexu++8ie+8jOaKpSBBTkxT44CCCumihOacn++8mnRva2VuIOWOi+e8qeWcqOS9jumihOeul+S4i+acgOWFiOWcqOatpOW0qeKAlOKAlOWksei0peahiOS+i+WIhuaekOS4u+e0oOadkOOAggrlrZDpm4YgMzAwIOadoSAtPiBkYXRhL3RleHR2cWFfc2FtcGxlLmpzb25sCiIiIgpmcm9tIF9fZnV0dXJlX18gaW1wb3J0IGFubm90YXRpb25zCgppbXBvcnQganNvbgpmcm9tIHBhdGhsaWIgaW1wb3J0IFBhdGgKCgpkZWYgbG9hZF9zYW1wbGUoZGF0YV9kaXI6IHN0ciwgbjogaW50ID0gMzAwLCBzZWVkOiBpbnQgPSA0Mik6CiAgICBwYXRoID0gUGF0aChkYXRhX2RpcikgLyAidGV4dHZxYV9zYW1wbGUuanNvbmwiCiAgICB3aXRoIG9wZW4ocGF0aCwgInIiLCBlbmNvZGluZz0idXRmLTgiKSBhcyBmOgogICAgICAgIHJldHVybiBbanNvbi5sb2FkcyhsaW5lKSBmb3IgbGluZSBpbiBmXQoKCmRlZiBwcm9tcHRfb2YoaXRlbTogZGljdCkgLT4gc3RyOgogICAgcmV0dXJuIGl0ZW1bInF1ZXN0aW9uIl0KCgpkZWYgX2xldmVuc2h0ZWluKGE6IHN0ciwgYjogc3RyKSAtPiBpbnQ6CiAgICBpZiBsZW4oYSkgPCBsZW4oYik6CiAgICAgICAgYSwgYiA9IGIsIGEKICAgIHByZXYgPSBsaXN0KHJhbmdlKGxlbihiKSArIDEpKQogICAgZm9yIGksIGNhIGluIGVudW1lcmF0ZShhLCAxKToKICAgICAgICBjdXIgPSBbaV0KICAgICAgICBmb3IgaiwgY2IgaW4gZW51bWVyYXRlKGIsIDEpOgogICAgICAgICAgICBjdXIuYXBwZW5kKG1pbihwcmV2W2pdICsgMSwgY3VyW2ogLSAxXSArIDEsIHByZXZbaiAtIDFdICsgKGNhICE9IGNiKSkpCiAgICAgICAgcHJldiA9IGN1cgogICAgcmV0dXJuIHByZXZbLTFdCgoKZGVmIGFubHNfb25lKHByZWQ6IHN0ciwgZ3RzOiBsaXN0W3N0cl0sIHRhdTogZmxvYXQgPSAwLjUpIC0+IGZsb2F0OgogICAgYmVzdCA9IDEuMAogICAgZm9yIGcgaW4gZ3RzOgogICAgICAgIGQgPSBfbGV2ZW5zaHRlaW4ocHJlZC5sb3dlcigpLnN0cmlwKCksIGcubG93ZXIoKS5zdHJpcCgpKQogICAgICAgIG5kID0gbWluKGQgLyBtYXgobGVuKHByZWQpLCBsZW4oZyksIDEpLCAxLjApCiAgICAgICAgYmVzdCA9IG1pbihiZXN0LCBuZCBpZiBuZCA8IHRhdSBlbHNlIDEuMCkKICAgIHJldHVybiAxLjAgLSBiZXN0CgoKZGVmIHNjb3JlKHByZWRzOiBsaXN0W3N0cl0sIGd0czogbGlzdFtsaXN0W3N0cl1dKSAtPiBkaWN0OgogICAgcmV0dXJuIHsiYW5scyI6IHN1bShhbmxzX29uZShwLCBnKSBmb3IgcCwgZyBpbiB6aXAocHJlZHMsIGd0cykpIC8gbWF4KGxlbihndHMpLCAxKX0K
+"""TextVQA: 图中文字读取（OCR 类），报 ANLS。
+预期：token 压缩在低预算下最先在此崩——失败案例分析主素材。
+子集 300 条 -> data/textvqa_sample.jsonl
+"""
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+
+def load_sample(data_dir: str, n: int = 300, seed: int = 42):
+    path = Path(data_dir) / "textvqa_sample.jsonl"
+    with open(path, "r", encoding="utf-8") as f:
+        return [json.loads(line) for line in f]
+
+
+def prompt_of(item: dict) -> str:
+    return item["question"]
+
+
+def _levenshtein(a: str, b: str) -> int:
+    if len(a) < len(b):
+        a, b = b, a
+    prev = list(range(len(b) + 1))
+    for i, ca in enumerate(a, 1):
+        cur = [i]
+        for j, cb in enumerate(b, 1):
+            cur.append(min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (ca != cb)))
+        prev = cur
+    return prev[-1]
+
+
+def anls_one(pred: str, gts: list[str], tau: float = 0.5) -> float:
+    best = 1.0
+    for g in gts:
+        d = _levenshtein(pred.lower().strip(), g.lower().strip())
+        nd = min(d / max(len(pred), len(g), 1), 1.0)
+        best = min(best, nd if nd < tau else 1.0)
+    return 1.0 - best
+
+
+def score(preds: list[str], gts: list[list[str]]) -> dict:
+    return {"anls": sum(anls_one(p, g) for p, g in zip(preds, gts)) / max(len(gts), 1)}

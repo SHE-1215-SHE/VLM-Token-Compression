@@ -1,1 +1,36 @@
-IiIi57uf5LiA5Yqg6L29IFF3ZW4yLjUtVkzjgIIKClcxIOmqjOaUtueCue+8mgotIGF0dG5faW1wbGVtZW50YXRpb24g5b+F6aG75pivICJlYWdlciLvvIzlkKbliJkgaG9vayDmi7/kuI3liLAgYXR0ZW50aW9uIOadg+mHje+8mwotIOi/lOWbniAobW9kZWwsIHByb2Nlc3NvcinvvIxwcm9jZXNzb3Ig6LSf6LSj5Zu+5YOP6aKE5aSE55CG5LiOIHRva2VuIOWxleW8gOOAggoiIiIKZnJvbSBfX2Z1dHVyZV9fIGltcG9ydCBhbm5vdGF0aW9ucwoKaW1wb3J0IHRvcmNoCmltcG9ydCB5YW1sCmZyb20gdHJhbnNmb3JtZXJzIGltcG9ydCBRd2VuMl81X1ZMRm9yQ29uZGl0aW9uYWxHZW5lcmF0aW9uLCBBdXRvUHJvY2Vzc29yCgoKZGVmIGxvYWRfZnJvbV9jb25maWcoY29uZmlnX3BhdGg6IHN0cik6CiAgICB3aXRoIG9wZW4oY29uZmlnX3BhdGgsICJyIiwgZW5jb2Rpbmc9InV0Zi04IikgYXMgZjoKICAgICAgICBjZmcgPSB5YW1sLnNhZmVfbG9hZChmKQogICAgcmV0dXJuIGxvYWRfbW9kZWwoY2ZnWyJtb2RlbF9wYXRoIl0sIGNmZyksIGNmZwoKCmRlZiBsb2FkX21vZGVsKAogICAgbW9kZWxfcGF0aDogc3RyLAogICAgZHR5cGU6IHN0ciA9ICJiZmxvYXQxNiIsCiAgICBhdHRuX2ltcGxlbWVudGF0aW9uOiBzdHIgPSAiZWFnZXIiLAogICAgZGV2aWNlX21hcDogc3RyID0gImN1ZGE6MCIsCiAgICBsb2FkX2luXzhiaXQ6IGJvb2wgPSBGYWxzZSwKKToKICAgIHRvcmNoX2R0eXBlID0geyJiZmxvYXQxNiI6IHRvcmNoLmJmbG9hdDE2LCAiZmxvYXQxNiI6IHRvcmNoLmZsb2F0MTZ9W2R0eXBlXQogICAgbW9kZWwgPSBRd2VuMl81X1ZMRm9yQ29uZGl0aW9uYWxHZW5lcmF0aW9uLmZyb21fcHJldHJhaW5lZCgKICAgICAgICBtb2RlbF9wYXRoLAogICAgICAgIHRvcmNoX2R0eXBlPXRvcmNoX2R0eXBlLAogICAgICAgIGF0dG5faW1wbGVtZW50YXRpb249YXR0bl9pbXBsZW1lbnRhdGlvbiwKICAgICAgICBkZXZpY2VfbWFwPWRldmljZV9tYXAsCiAgICAgICAgbG9hZF9pbl84Yml0PWxvYWRfaW5fOGJpdCBpZiBsb2FkX2luXzhiaXQgZWxzZSBOb25lLAogICAgKQogICAgcHJvY2Vzc29yID0gQXV0b1Byb2Nlc3Nvci5mcm9tX3ByZXRyYWluZWQobW9kZWxfcGF0aCkKICAgIHJldHVybiBtb2RlbCwgcHJvY2Vzc29yCg==
+"""统一加载 Qwen2.5-VL。
+
+W1 验收点：
+- attn_implementation 必须是 "eager"，否则 hook 拿不到 attention 权重；
+- 返回 (model, processor)，processor 负责图像预处理与 token 展开。
+"""
+from __future__ import annotations
+
+import torch
+import yaml
+from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor
+
+
+def load_from_config(config_path: str):
+    with open(config_path, "r", encoding="utf-8") as f:
+        cfg = yaml.safe_load(f)
+    return load_model(cfg["model_path"], cfg), cfg
+
+
+def load_model(
+    model_path: str,
+    dtype: str = "bfloat16",
+    attn_implementation: str = "eager",
+    device_map: str = "cuda:0",
+    load_in_8bit: bool = False,
+):
+    torch_dtype = {"bfloat16": torch.bfloat16, "float16": torch.float16}[dtype]
+    model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
+        model_path,
+        torch_dtype=torch_dtype,
+        attn_implementation=attn_implementation,
+        device_map=device_map,
+        load_in_8bit=load_in_8bit if load_in_8bit else None,
+    )
+    processor = AutoProcessor.from_pretrained(model_path)
+    return model, processor

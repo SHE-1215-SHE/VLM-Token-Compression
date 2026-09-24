@@ -1,1 +1,6 @@
-IiIiR3JhZGlvIGRlbW/vvIhXNO+8ie+8muWQjOS4gOW8oOWbvu+8jOW8gOWFs+WOi+e8qe+8jOWvueavlOi+k+WHuuaWh+acrCArIOiAl+aXtiArIOaYvuWtmOOAgiIiIgpmcm9tIF9fZnV0dXJlX18gaW1wb3J0IGFubm90YXRpb25zCgojIFRPRE8oVzQpOiBnci5CbG9ja3Mg5biD5bGAID0gW+WbvuWDj+S4iuS8oCB8IGJ1ZGdldCDmu5HmnaEgfCBtZXRob2Qg5LiL5ouJXSAtPgojICAgICAgICAgICBb5bemOiBiYXNlbGluZSDovpPlh7or6ICX5pe2XSBb5Y+zOiDljovnvKnovpPlh7or6ICX5pe2XSBbdG9rZW4g5L+d55WZ54Ot5Yqb5Zu+XQpwcmludCgiZGVtbyBwbGFjZWhvbGRlciAtIGJ1aWxkIGluIFc0IikK
+"""Gradio demo（W4）：同一张图，开关压缩，对比输出文本 + 耗时 + 显存。"""
+from __future__ import annotations
+
+# TODO(W4): gr.Blocks 布局 = [图像上传 | budget 滑条 | method 下拉] ->
+#           [左: baseline 输出+耗时] [右: 压缩输出+耗时] [token 保留热力图]
+print("demo placeholder - build in W4")

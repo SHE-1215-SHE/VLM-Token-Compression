@@ -1,1 +1,10 @@
-dG9yY2g+PTIuNAp0cmFuc2Zvcm1lcnM+PTQuNDkuMAphY2NlbGVyYXRlPj0wLjM0LjAKcXdlbi12bC11dGlscz49MC4wLjgKcGlsbG93CnB5eWFtbApwYW5kYXMKbWF0cGxvdGxpYgpkYXRhc2V0cwpncmFkaW8+PTQuNDQK
+torch>=2.4
+transformers>=4.49.0
+accelerate>=0.34.0
+qwen-vl-utils>=0.0.8
+pillow
+pyyaml
+pandas
+matplotlib
+datasets
+gradio>=4.44

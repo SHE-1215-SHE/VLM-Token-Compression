@@ -1,1 +1,34 @@
-IiIiQ1VEQSBldmVudHMg5YiG5q616K6h5pe277yacHJlZmlsbO+8iOmmliB0b2tlbiDliY3vvInkuI4gZGVjb2Rl77yI6YCQIHRva2Vu77yJ44CCCgrmnKzku5PlupPmoLjlv4Plt67lvILljJbvvJrorrrmlofmiqUgRkxPUHPvvIzmiJHku6zmiqXnnJ/lrp4gbXPjgIIK55So5rOV77yaCiAgICB3aXRoIFRpbWVyKCkgYXMgdDogbW9kZWwuZ2VuZXJhdGUoLi4uKQogICAgdC5lbGFwc2VkX21zCiIiIgpmcm9tIF9fZnV0dXJlX18gaW1wb3J0IGFubm90YXRpb25zCgppbXBvcnQgdG9yY2gKCgpjbGFzcyBUaW1lcjoKICAgIGRlZiBfX2luaXRfXyhzZWxmKToKICAgICAgICBzZWxmLnN0YXJ0ID0gTm9uZQogICAgICAgIHNlbGYuZW5kID0gTm9uZQogICAgICAgIHNlbGYuZWxhcHNlZF9tcyA9IDAuMAoKICAgIGRlZiBfX2VudGVyX18oc2VsZik6CiAgICAgICAgdG9yY2guY3VkYS5zeW5jaHJvbml6ZSgpCiAgICAgICAgc2VsZi5zdGFydCA9IHRvcmNoLmN1ZGEuRXZlbnQoZW5hYmxlX3RpbWluZz1UcnVlKQogICAgICAgIHNlbGYuZW5kID0gdG9yY2guY3VkYS5FdmVudChlbmFibGVfdGltaW5nPVRydWUpCiAgICAgICAgc2VsZi5zdGFydC5yZWNvcmQoKQogICAgICAgIHJldHVybiBzZWxmCgogICAgZGVmIF9fZXhpdF9fKHNlbGYsICpleGMpOgogICAgICAgIHNlbGYuZW5kLnJlY29yZCgpCiAgICAgICAgdG9yY2guY3VkYS5zeW5jaHJvbml6ZSgpCiAgICAgICAgc2VsZi5lbGFwc2VkX21zID0gc2VsZi5zdGFydC5lbGFwc2VkX3RpbWUoc2VsZi5lbmQpCgoKZGVmIG1lYXN1cmVfZ2VuZXJhdGUobW9kZWwsIHByb2Nlc3NvciwgaW5wdXRzLCBuX3dhcm11cD0yLCBuX3J1bnM9NSkgLT4gZGljdDoKICAgICIiIndhcm11cCDlkI7lpJrmrKHlj5blnYflgLzvvJvliIbliKvorrDlvZUgVFRGVCDkuI7mgLvml7bplb/jgIJXMSDku7vliqEgNyDlrp7njrDjgIIiIiIKICAgIHJhaXNlIE5vdEltcGxlbWVudGVkRXJyb3IK
+"""CUDA events 分段计时：prefill（首 token 前）与 decode（逐 token）。
+
+本仓库核心差异化：论文报 FLOPs，我们报真实 ms。
+用法：
+    with Timer() as t: model.generate(...)
+    t.elapsed_ms
+"""
+from __future__ import annotations
+
+import torch
+
+
+class Timer:
+    def __init__(self):
+        self.start = None
+        self.end = None
+        self.elapsed_ms = 0.0
+
+    def __enter__(self):
+        torch.cuda.synchronize()
+        self.start = torch.cuda.Event(enable_timing=True)
+        self.end = torch.cuda.Event(enable_timing=True)
+        self.start.record()
+        return self
+
+    def __exit__(self, *exc):
+        self.end.record()
+        torch.cuda.synchronize()
+        self.elapsed_ms = self.start.elapsed_time(self.end)
+
+
+def measure_generate(model, processor, inputs, n_warmup=2, n_runs=5) -> dict:
+    """warmup 后多次取均值；分别记录 TTFT 与总时长。W1 任务 7 实现。"""
+    raise NotImplementedError

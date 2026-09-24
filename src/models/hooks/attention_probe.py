@@ -1,1 +1,31 @@
-IiIiRm9yd2FyZCBob29rIOaKk+WPliBkZWNvZGVyIOavj+WxgiBhdHRlbnRpb24g5p2D6YeN44CCCgrnlKjms5XvvIhXMSDku7vliqEgNO+8ie+8mgogICAgcHJvYmUgPSBBdHRlbnRpb25Qcm9iZShtb2RlbC5tb2RlbC5sYXllcnNbS10pCiAgICBvdXQgPSBtb2RlbC5nZW5lcmF0ZSgqKmlucHV0cykKICAgIGF0dG4gPSBwcm9iZS5sYXN0ICAgIyAoYmF0Y2gsIGhlYWRzLCBMLCBMKQoK5rOo5oSP77yaCi0g5Y+q5pyJIGF0dG5faW1wbGVtZW50YXRpb249ImVhZ2VyIiDml7Ygb3V0cHV0X2F0dGVudGlvbnM9VHJ1ZSDmiY3nnJ/mraPov5Tlm57nn6npmLXvvJsKLSBMID0g6KeG6KeJIHRva2VuIOaVsCArIOaWh+acrCB0b2tlbiDmlbDvvIzop4bop4kgdG9rZW4g5Zyo5YmN77yIaW1hZ2UgdG9rZW4g5L2N5LqOIGlucHV0X2lkcyDkuK0KICDnlLEgPHxpbWFnZV9wYWR8PiDmoIforrDvvIzkvY3nva7lj6/nlKggZ3JpZF90aHcg5o6o5Ye677yJ44CCCiIiIgpmcm9tIF9fZnV0dXJlX18gaW1wb3J0IGFubm90YXRpb25zCgpmcm9tIHR5cGluZyBpbXBvcnQgT3B0aW9uYWwKCmltcG9ydCB0b3JjaAoKCmNsYXNzIEF0dGVudGlvblByb2JlOgogICAgZGVmIF9faW5pdF9fKHNlbGYsIGxheWVyX21vZHVsZTogdG9yY2gubm4uTW9kdWxlKToKICAgICAgICBzZWxmLmxhc3Q6IE9wdGlvbmFsW3RvcmNoLlRlbnNvcl0gPSBOb25lCiAgICAgICAgc2VsZi5oYW5kbGUgPSBsYXllcl9tb2R1bGUucmVnaXN0ZXJfZm9yd2FyZF9ob29rKHNlbGYuX2hvb2spCgogICAgZGVmIF9ob29rKHNlbGYsIG1vZHVsZSwgaW5wdXRzLCBvdXRwdXQpOgogICAgICAgICMgUXdlbjIuNS1WTCBkZWNvZGVyIGxheWVyIOi/lOWbniAoaGlkZGVuX3N0YXRlcywgYXR0bl93ZWlnaHRzPykg5oiWIChoaWRkZW5fc3RhdGVzLCAuLi4pCiAgICAgICAgaWYgaXNpbnN0YW5jZShvdXRwdXQsIHR1cGxlKSBhbmQgbGVuKG91dHB1dCkgPiAxIGFuZCBvdXRwdXRbMV0gaXMgbm90IE5vbmU6CiAgICAgICAgICAgIHNlbGYubGFzdCA9IG91dHB1dFsxXS5kZXRhY2goKQoKICAgIGRlZiByZW1vdmUoc2VsZik6CiAgICAgICAgc2VsZi5oYW5kbGUucmVtb3ZlKCkK
+"""Forward hook 抓取 decoder 每层 attention 权重。
+
+用法（W1 任务 4）：
+    probe = AttentionProbe(model.model.layers[K])
+    out = model.generate(**inputs)
+    attn = probe.last   # (batch, heads, L, L)
+
+注意：
+- 只有 attn_implementation="eager" 时 output_attentions=True 才真正返回矩阵；
+- L = 视觉 token 数 + 文本 token 数，视觉 token 在前（image token 位于 input_ids 中
+  由 <|image_pad|> 标记，位置可用 grid_thw 推出）。
+"""
+from __future__ import annotations
+
+from typing import Optional
+
+import torch
+
+
+class AttentionProbe:
+    def __init__(self, layer_module: torch.nn.Module):
+        self.last: Optional[torch.Tensor] = None
+        self.handle = layer_module.register_forward_hook(self._hook)
+
+    def _hook(self, module, inputs, output):
+        # Qwen2.5-VL decoder layer 返回 (hidden_states, attn_weights?) 或 (hidden_states, ...)
+        if isinstance(output, tuple) and len(output) > 1 and output[1] is not None:
+            self.last = output[1].detach()
+
+    def remove(self):
+        self.handle.remove()

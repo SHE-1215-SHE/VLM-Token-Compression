@@ -1,1 +1,27 @@
-IiIiR1FBOiDnu4TlkIjop4bop4npl67nrZTvvIjnn63nrZTmoYjvvInvvIzmiqUgQWNjdXJhY3nvvIjlrr3mnb7ljLnphY3vvInjgIIK5a2Q6ZuGIDUwMCDmnaEgLT4gZGF0YS9ncWFfc2FtcGxlLmpzb25sCiIiIgpmcm9tIF9fZnV0dXJlX18gaW1wb3J0IGFubm90YXRpb25zCgppbXBvcnQganNvbgppbXBvcnQgcmUKZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCgoKZGVmIGxvYWRfc2FtcGxlKGRhdGFfZGlyOiBzdHIsIG46IGludCA9IDUwMCwgc2VlZDogaW50ID0gNDIpOgogICAgcGF0aCA9IFBhdGgoZGF0YV9kaXIpIC8gImdxYV9zYW1wbGUuanNvbmwiCiAgICB3aXRoIG9wZW4ocGF0aCwgInIiLCBlbmNvZGluZz0idXRmLTgiKSBhcyBmOgogICAgICAgIHJldHVybiBbanNvbi5sb2FkcyhsaW5lKSBmb3IgbGluZSBpbiBmXQoKCmRlZiBwcm9tcHRfb2YoaXRlbTogZGljdCkgLT4gc3RyOgogICAgcmV0dXJuIGl0ZW1bInF1ZXN0aW9uIl0gKyAiIEFuc3dlciBpbiBvbmUgb3IgdHdvIHdvcmRzLiIKCgpkZWYgbm9ybWFsaXplKHM6IHN0cikgLT4gc3RyOgogICAgcmV0dXJuIHJlLnN1YihyIlteYS16MC05IF0iLCAiIiwgcy5sb3dlcigpKS5zdHJpcCgpCgoKZGVmIHNjb3JlKHByZWRzOiBsaXN0W3N0cl0sIGd0czogbGlzdFtzdHJdKSAtPiBkaWN0OgogICAgaGl0ID0gc3VtKG5vcm1hbGl6ZShnKSBpbiBub3JtYWxpemUocCkgZm9yIHAsIGcgaW4gemlwKHByZWRzLCBndHMpKQogICAgcmV0dXJuIHsiYWNjIjogaGl0IC8gbWF4KGxlbihndHMpLCAxKX0K
+"""GQA: 组合视觉问答（短答案），报 Accuracy（宽松匹配）。
+子集 500 条 -> data/gqa_sample.jsonl
+"""
+from __future__ import annotations
+
+import json
+import re
+from pathlib import Path
+
+
+def load_sample(data_dir: str, n: int = 500, seed: int = 42):
+    path = Path(data_dir) / "gqa_sample.jsonl"
+    with open(path, "r", encoding="utf-8") as f:
+        return [json.loads(line) for line in f]
+
+
+def prompt_of(item: dict) -> str:
+    return item["question"] + " Answer in one or two words."
+
+
+def normalize(s: str) -> str:
+    return re.sub(r"[^a-z0-9 ]", "", s.lower()).strip()
+
+
+def score(preds: list[str], gts: list[str]) -> dict:
+    hit = sum(normalize(g) in normalize(p) for p, g in zip(preds, gts))
+    return {"acc": hit / max(len(gts), 1)}

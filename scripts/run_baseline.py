@@ -1,1 +1,15 @@
-IiIi5peg5Y6L57yp5Z+657q/5YWo6YeP6LeR77yIVzEg5Lu75YqhIDYg55qE5YWl5Y+j77yJ44CCIiIiCmZyb20gX19mdXR1cmVfXyBpbXBvcnQgYW5ub3RhdGlvbnMKCmltcG9ydCBzdWJwcm9jZXNzCmltcG9ydCBzeXMKCkNNRCA9IFsKICAgIHN5cy5leGVjdXRhYmxlLCAiLW0iLCAic3JjLmV2YWwucnVubmVyIiwKICAgICItLWNvbmZpZyIsICJjb25maWdzL3F3ZW4yNXZsXzNiLnlhbWwiLAogICAgIi0tbWV0aG9kIiwgImJhc2VsaW5lIiwKICAgICItLWJ1ZGdldCIsICIxLjAiLApdCgppZiBfX25hbWVfXyA9PSAiX19tYWluX18iOgogICAgcmFpc2UgU3lzdGVtRXhpdChzdWJwcm9jZXNzLmNhbGwoQ01EICsgc3lzLmFyZ3ZbMTpdKSkK
+"""无压缩基线全量跑（W1 任务 6 的入口）。"""
+from __future__ import annotations
+
+import subprocess
+import sys
+
+CMD = [
+    sys.executable, "-m", "src.eval.runner",
+    "--config", "configs/qwen25vl_3b.yaml",
+    "--method", "baseline",
+    "--budget", "1.0",
+]
+
+if __name__ == "__main__":
+    raise SystemExit(subprocess.call(CMD + sys.argv[1:]))

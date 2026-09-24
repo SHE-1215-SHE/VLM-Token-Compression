@@ -1,1 +1,28 @@
-IiIi5ZyoIGRlY29kZXIg56ysIEsg5bGC6KOB5Ymq6KeG6KeJIHRva2VuIOeahOWfuuexu++8iEZhc3RWIOmjjuagvOaPkuahqeeCue+8ieOAggoKVzIg55qEIGZhc3R2LnB5IC8gdmlzaW9uemlwLnB5IC8gY3JvcF9yLnB5IOmDvee7p+aJvyBUb2tlblBydW5lcu+8jArlj6rpnIDlrp7njrAgcmFua190b2tlbnMoKe+8m+acrOWfuuexu+i0n+i0o++8mgoxLiDlrprkvY0gaW5wdXRfaWRzIOS4reinhuiniSB0b2tlbiDnmoTntKLlvJXljLrpl7TvvIhpbWFnZV9wYWQgdG9rZW4gaWTvvInvvJsKMi4g5Zyo56ysIEsg5bGCIGZvcndhcmQg5YmN5oyJIHJhbmsg57uT5p6cIGdhdGhlciBoaWRkZW5fc3RhdGVzIC8gcG9zaXRpb25faWRzIC8gYXR0ZW50aW9uX21hc2vvvJsKMy4g6K6w5b2V6KKr6KOBIHRva2VuIOaVsO+8jOS+myBwcm9maWxpbmcg5a+56b2Q44CCCiIiIgpmcm9tIF9fZnV0dXJlX18gaW1wb3J0IGFubm90YXRpb25zCgpmcm9tIGFiYyBpbXBvcnQgQUJDLCBhYnN0cmFjdG1ldGhvZApmcm9tIHR5cGluZyBpbXBvcnQgTGlzdAoKaW1wb3J0IHRvcmNoCgoKY2xhc3MgVG9rZW5QcnVuZXIoQUJDKToKICAgIGRlZiBfX2luaXRfXyhzZWxmLCBrX2xheWVyOiBpbnQgPSAyLCBrZWVwX3JhdGlvOiBmbG9hdCA9IDAuMzMpOgogICAgICAgIHNlbGYua19sYXllciA9IGtfbGF5ZXIKICAgICAgICBzZWxmLmtlZXBfcmF0aW8gPSBrZWVwX3JhdGlvCiAgICAgICAgc2VsZi5yZW1vdmVkOiBMaXN0W2ludF0gPSBbXQoKICAgIEBhYnN0cmFjdG1ldGhvZAogICAgZGVmIHJhbmtfdG9rZW5zKHNlbGYsIGF0dG46IHRvcmNoLlRlbnNvciwgdmlzdWFsX2lkeDogdG9yY2guVGVuc29yKSAtPiB0b3JjaC5UZW5zb3I6CiAgICAgICAgIiIi6L+U5Zue6KeG6KeJIHRva2VuIOeahOmHjeimgeaAp+WIhuaVsCAoYmF0Y2gsIG5fdmlzdWFsKeOAgiIiIgoKICAgIGRlZiB2aXN1YWxfdG9rZW5fcG9zaXRpb25zKHNlbGYsIGlucHV0X2lkczogdG9yY2guVGVuc29yLCBpbWFnZV9wYWRfaWQ6IGludCkgLT4gdG9yY2guVGVuc29yOgogICAgICAgIHJldHVybiAoaW5wdXRfaWRzID09IGltYWdlX3BhZF9pZCkubm9uemVybyhhc190dXBsZT1UcnVlKVsxXQo=
+"""在 decoder 第 K 层裁剪视觉 token 的基类（FastV 风格插桩点）。
+
+W2 的 fastv.py / visionzip.py / crop_r.py 都继承 TokenPruner，
+只需实现 rank_tokens()；本基类负责：
+1. 定位 input_ids 中视觉 token 的索引区间（image_pad token id）；
+2. 在第 K 层 forward 前按 rank 结果 gather hidden_states / position_ids / attention_mask；
+3. 记录被裁 token 数，供 profiling 对齐。
+"""
+from __future__ import annotations
+
+from abc import ABC, abstractmethod
+from typing import List
+
+import torch
+
+
+class TokenPruner(ABC):
+    def __init__(self, k_layer: int = 2, keep_ratio: float = 0.33):
+        self.k_layer = k_layer
+        self.keep_ratio = keep_ratio
+        self.removed: List[int] = []
+
+    @abstractmethod
+    def rank_tokens(self, attn: torch.Tensor, visual_idx: torch.Tensor) -> torch.Tensor:
+        """返回视觉 token 的重要性分数 (batch, n_visual)。"""
+
+    def visual_token_positions(self, input_ids: torch.Tensor, image_pad_id: int) -> torch.Tensor:
+        return (input_ids == image_pad_id).nonzero(as_tuple=True)[1]

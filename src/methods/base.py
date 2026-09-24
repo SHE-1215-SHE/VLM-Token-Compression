@@ -1,1 +1,25 @@
-IiIi5omA5pyJ5Y6L57yp5pa55rOV55qE57uf5LiA5o6l5Y+j44CCCgpydW5uZXIucHkg5Y+q6K6k6L+Z5Liq5o6l5Y+j77yM5paw5aKe5pa55rOVID0g5paw5YaZ5LiA5Liq5paH5Lu25a6e546wIGNvbXByZXNzKCnjgIIKIiIiCmZyb20gX19mdXR1cmVfXyBpbXBvcnQgYW5ub3RhdGlvbnMKCmZyb20gYWJjIGltcG9ydCBBQkMsIGFic3RyYWN0bWV0aG9kCgppbXBvcnQgdG9yY2gKCgpjbGFzcyBDb21wcmVzc2lvbk1ldGhvZChBQkMpOgogICAgbmFtZTogc3RyID0gImJhc2UiCgogICAgZGVmIF9faW5pdF9fKHNlbGYsIGJ1ZGdldDogZmxvYXQgPSAxLjAsICoqa3dhcmdzKToKICAgICAgICAjIGJ1ZGdldDog5L+d55WZ5q+U5L6LICgwfjFd77yMMS4wIOWNsyBiYXNlbGluZSDkuI3ljovnvKkKICAgICAgICBzZWxmLmJ1ZGdldCA9IGJ1ZGdldAoKICAgIEBhYnN0cmFjdG1ldGhvZAogICAgZGVmIGNvbXByZXNzKAogICAgICAgIHNlbGYsCiAgICAgICAgdmlzdWFsX3Rva2VuczogdG9yY2guVGVuc29yLAogICAgICAgIGF0dG46IHRvcmNoLlRlbnNvciB8IE5vbmUgPSBOb25lLAogICAgKSAtPiB0b3JjaC5UZW5zb3I6CiAgICAgICAgIiIi6L6T5YWlIChCLCBOLCBEKSDop4bop4kgdG9rZW7vvIzovpPlh7ogKEIsIE4nLCBEKe+8jE4nID0gY2VpbChOICogYnVkZ2V0KeOAgiIiIgo=
+"""所有压缩方法的统一接口。
+
+runner.py 只认这个接口，新增方法 = 新写一个文件实现 compress()。
+"""
+from __future__ import annotations
+
+from abc import ABC, abstractmethod
+
+import torch
+
+
+class CompressionMethod(ABC):
+    name: str = "base"
+
+    def __init__(self, budget: float = 1.0, **kwargs):
+        # budget: 保留比例 (0~1]，1.0 即 baseline 不压缩
+        self.budget = budget
+
+    @abstractmethod
+    def compress(
+        self,
+        visual_tokens: torch.Tensor,
+        attn: torch.Tensor | None = None,
+    ) -> torch.Tensor:
+        """输入 (B, N, D) 视觉 token，输出 (B, N', D)，N' = ceil(N * budget)。"""

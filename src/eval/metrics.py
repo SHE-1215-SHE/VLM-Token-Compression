@@ -1,1 +1,9 @@
-IiIi5rGH5oC75ZCEIGJlbmNobWFyayDmjIfmoIfkuLrnu5/kuIDnu5PmnpzooYzjgIIiIiINCmZyb20gX19mdXR1cmVfXyBpbXBvcnQgYW5ub3RhdGlvbnMNCg0KQkVOQ0hfTUVUUklDUyA9IHsNCiAgICAicG9wZSI6ICJmMSIsDQogICAgImdxYSI6ICJhY2MiLA0KICAgICJ0ZXh0dnFhIjogImFubHMiLA0KICAgICJtbWJlbmNoIjogImFjYyIsDQp9DQo=
+"""汇总各 benchmark 指标为统一结果行。"""
+from __future__ import annotations
+
+BENCH_METRICS = {
+    "pope": "f1",
+    "gqa": "acc",
+    "textvqa": "anls",
+    "mmbench": "acc",
+}

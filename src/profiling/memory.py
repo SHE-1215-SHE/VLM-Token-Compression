@@ -1,1 +1,11 @@
-IiIi5pi+5a2Y5bOw5YC85rWL6YeP44CCIiIiCmZyb20gX19mdXR1cmVfXyBpbXBvcnQgYW5ub3RhdGlvbnMKCmltcG9ydCB0b3JjaAoKCmRlZiBwZWFrX21lbW9yeV9nYihmbiwgKmFyZ3MsICoqa3dhcmdzKSAtPiB0dXBsZVtvYmplY3QsIGZsb2F0XToKICAgICIiIuaJp+ihjCBmbiDlubbov5Tlm54gKGZu57uT5p6cLCDls7DlgLzmmL7lrZhHQinjgILosIPnlKjliY3pnIAgcmVzZXRfcGVha19tZW1vcnlfc3RhdHPjgIIiIiIKICAgIHRvcmNoLmN1ZGEucmVzZXRfcGVha19tZW1vcnlfc3RhdHMoKQogICAgcmVzdWx0ID0gZm4oKmFyZ3MsICoqa3dhcmdzKQogICAgcmV0dXJuIHJlc3VsdCwgdG9yY2guY3VkYS5tYXhfbWVtb3J5X2FsbG9jYXRlZCgpIC8gMTAyNCoqMwo=
+"""显存峰值测量。"""
+from __future__ import annotations
+
+import torch
+
+
+def peak_memory_gb(fn, *args, **kwargs) -> tuple[object, float]:
+    """执行 fn 并返回 (fn结果, 峰值显存GB)。调用前需 reset_peak_memory_stats。"""
+    torch.cuda.reset_peak_memory_stats()
+    result = fn(*args, **kwargs)
+    return result, torch.cuda.max_memory_allocated() / 1024**3
