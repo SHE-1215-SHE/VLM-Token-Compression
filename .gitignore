@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+results/*.csv
+results/*.png
+data/
+*.log
+.ipynb_checkpoints/
+# 本地规划文档（含求职隐私），不入库
+docs/project_memory.md
+
