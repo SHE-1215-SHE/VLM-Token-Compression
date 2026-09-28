@@ -112,7 +112,7 @@ scripts/
   check_env.py           W1 自检（推理、token 数、attention hook）
   make_figures.py        结论图（accuracy_vs_budget / latency）
   demo.py                Gradio demo（方法×预算对比，实时显存/token 统计）
-configs/          qwen25vl_3b.yaml（7B 配置待加）
+configs/          qwen25vl_3b.yaml
 results/          20 组 json（preds/逐条耗时/scores）+ figures/
 ```
 
