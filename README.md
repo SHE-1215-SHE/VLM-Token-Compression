@@ -38,6 +38,7 @@
 复现：`python scripts/sample_benchmarks.py --coco-root /path/to/coco`
 
 ![accuracy vs budget](results/figures/accuracy_vs_budget.png)
+如图：FastV/ToMe 曲线与 baseline 重合即"结构性免疫"的直观呈现（ToMe 虚线为标准解析的假崩口径）；
 
 ## Results（Qwen2.5-VL-3B，POPE 500 / MMBench 500，4090 单卡，eager attention，max_pixels=602112）
 
@@ -86,7 +87,7 @@
 
 ![latency](results/figures/latency.png)
 
-图由 `python scripts/make_figures.py --out results` 生成。左图：FastV/ToMe 曲线与 baseline 重合即"结构性免疫"的直观呈现（ToMe 虚线为标准解析的假崩口径）；下图：所有压缩配置实测时延均为 baseline 的 4-6 倍。
+图由 `python scripts/make_figures.py --out results` 生成。如图：所有压缩配置实测时延均为 baseline 的 4-6 倍。
 
 ### 复现
 
