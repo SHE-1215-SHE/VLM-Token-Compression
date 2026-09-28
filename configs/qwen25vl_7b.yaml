@@ -1,8 +1,0 @@
-model_path: Qwen/Qwen2.5-VL-7B-Instruct
-attn_implementation: eager
-dtype: bfloat16
-device_map: "cuda:0"
-# 7B bf16 权重约 16GB + 长 prompt，24GB 偏紧：batch=1，必要时 load_in_8bit: true
-load_in_8bit: false
-token_budgets: [1.0, 0.33, 0.11, 0.055]
-benchmarks: [pope, gqa, textvqa, mmbench]

@@ -3,6 +3,8 @@ model_path: Qwen/Qwen2.5-VL-3B-Instruct
 attn_implementation: eager
 dtype: bfloat16
 device_map: "cuda:0"
+# 封顶视觉 token 数（eager attention 显存随分辨率平方涨；budget 以 576 为 100% 基准）
+max_pixels: 602112  # 768 * 28 * 28
 # Qwen2.5-VL 是 dynamic resolution，实际 token 数随输入变化；
 # 这里的 budget 以 576（约 28x28 经 2x2 merge 后）为 100% 参考
 token_budgets: [1.0, 0.33, 0.11, 0.055]

@@ -1,0 +1,32 @@
+{
+ "scores": {
+  "acc": 1.0,
+  "f1": 0.9999999991666666
+ },
+ "mean_gen_ms": 2963.2419921875,
+ "preds": [
+  "Yes\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+  "No\n\nuser\n\nassistant\nYes\n\n\n\n\n\n\n",
+  "Yes\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+  "No\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+  "Yes\n\nuser\n\nassistant\nYes\n\n\n\n\n\n\n"
+ ],
+ "gts": [
+  "yes",
+  "no",
+  "yes",
+  "no",
+  "yes"
+ ],
+ "timings": [
+  3753.591796875,
+  2983.931884765625,
+  2747.463623046875,
+  2663.34423828125,
+  2667.87841796875
+ ],
+ "wall_s": 17.235063791275024,
+ "method": "fastv",
+ "budget": 1.0,
+ "peak_mem_gb": 7.40791130065918
+}

@@ -5,5 +5,7 @@ results/*.png
 data/
 *.log
 .ipynb_checkpoints/
-# 本地规划文档（含求职隐私），不入库
-docs/project_memory.md
+# 本地规划/隐私文档，整个目录不入库
+docs/
+# 本地 README 草稿，不入库
+README copy.md

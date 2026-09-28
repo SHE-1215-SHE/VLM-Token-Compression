@@ -12,6 +12,9 @@
 from __future__ import annotations
 
 import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # 保证 src.* 可导入
 
 import torch
 
@@ -41,7 +44,8 @@ def main():
     model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
         MODEL_PATH, torch_dtype=torch.bfloat16, attn_implementation="eager", device_map="cuda:0"
     )
-    processor = AutoProcessor.from_pretrained(MODEL_PATH)
+    # eager 下视觉编码器 attention 显存随分辨率平方涨，封顶 ~768 个视觉 token
+    processor = AutoProcessor.from_pretrained(MODEL_PATH, max_pixels=768 * 28 * 28)
     n_layers = len(model.model.language_model.layers)
     ok &= check(2, True, f"模型加载成功，decoder 层数={n_layers}")
 
@@ -77,7 +81,9 @@ def main():
     from src.models.hooks.attention_probe import AttentionProbe
 
     probe = AttentionProbe(model.model.language_model.layers[2])
-    out = model(**inputs, output_attentions=True)
+    torch.cuda.empty_cache()
+    with torch.no_grad():
+        out = model(**inputs, output_attentions=True)
     probe.remove()
     a = probe.last
     ok &= check(5, a is not None and a.dim() == 4, f"attn shape={tuple(a.shape) if a is not None else None}")
